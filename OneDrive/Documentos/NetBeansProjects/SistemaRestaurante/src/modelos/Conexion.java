@@ -1,20 +1,17 @@
 package modelos;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class Conexion {
 
-    public  Connection getConnection() {
-        
-        try {
-            String BD = "jdbc:mysql://localhost/sistemaventabd";
-            Connection con = DriverManager.getConnection(BD, "root", "");
-            return con;
+    private static final String URL = "jdbc:mysql://localhost:3306/sistemaventabd";
+    private static final String USER = "root";
+    private static final String PASSWORD = "4123";
 
-        } catch (SQLException e) {
-            System.out.println(e.toString());
-        }
-        return null;
+    // Método estático para obtener la conexión
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
     }
-
 }
