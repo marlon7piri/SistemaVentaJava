@@ -13,23 +13,12 @@ import modelos.Conexion;
 public class ProductosDAO {
 
     static PreparedStatement pst;
-/*
-    
-     private int id;
-    private String nombre;
-    private String descripcion;
-    private int cantidad;
-    private int precio;
-    private String codigo;
-    private int proveedor_id;
-    private String proveedor_nombre;
-    */
+
     public List<Productos> VerProductos() {
         // Hacemos un JOIN entre productos y proveedores para obtener el nombre del proveedor
-    String sql2 = "SELECT p.id, p.nombre, p.descripcion, p.cantidad, p.precio, p.codigo, p.proveedor_id, prov.nombre AS proveedor_nombre " +
+    String sql = "SELECT p.id, p.nombre, p.descripcion, p.cantidad, p.precio, p.codigo, p.proveedor_id, prov.nombre AS proveedor_nombre " +
                  "FROM productos p " +
-                 "INNER JOIN proveedores prov ON p.proveedor_id = prov.id";
-        String sql = "SELECT p.id,p.nombre,p.descripcion,p.cantidad,p.precio,p.codigo,p.proveedor_id,pr.nombre AS proveedor_nombre FROM productos p INNER JOIN proveedores pr ON p.proveedor_id = pr.id";
+                 "INNER JOIN proveedores prov ON p.proveedor_id = prov.id ORDER BY proveedor_nombre";
         List<Productos> productos = new ArrayList<>();
 
         try {

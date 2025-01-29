@@ -18,6 +18,8 @@ import modelos.productos.ProductosDAO;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import modelos.clientes.Clientes;
+import modelos.clientes.ClientesDAO;
 import modelos.productos.proveedores.ProveedorDAO;
 import modelos.productos.proveedores.Proveedores;
 
@@ -49,37 +51,35 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
     public void VerClientes() {
         try {
-            Connection con = Conexion.getConnection();
-            PreparedStatement pst = con.prepareStatement("select * from clientes");
+            ClientesDAO clienteDAO = new ClientesDAO();
+            List<Clientes> clientes = clienteDAO.VerClientes();
 
-            ResultSet rs = pst.executeQuery();
+            // Obtener el modelo existente de la tabla
+            DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
 
-            DefaultTableModel modelo = new DefaultTableModel();
+            if (modelo.getColumnCount() == 0) {
+                modelo.addColumn("id");
+                modelo.addColumn("nombre");
+                modelo.addColumn("ruc");
+                modelo.addColumn("telefono");
+                modelo.addColumn("direccion");
+                modelo.addColumn("razon_social");
+            }
 
-            TablaClientes = new JTable(modelo);
-            ScrollPaneTablaCliente.setViewportView(TablaClientes);
-            modelo.addColumn("id");
-            modelo.addColumn("dni");
-            modelo.addColumn("nombre");
-            modelo.addColumn("telefono");
-            modelo.addColumn("direccion");
-            modelo.addColumn("razon");
-            //modelo.addColumn("fecha-registro");
+            for (Clientes cliente : clientes) {
+                Object[] obj = new Object[6];
+                obj[0] = cliente.getId();
+                obj[1] = cliente.getNombre();
+                obj[2] = cliente.getRuc();
+                obj[3] = cliente.getTelefono();
+                obj[4] = cliente.getDireccion();
+                obj[5] = cliente.getRazon_social();
 
-            while (rs.next()) {
-
-                Object[] fila = new Object[6];
-
-                for (int i = 0; i < 6; i++) {
-                    fila[i] = rs.getObject(i + 1);
-
-                }
-                modelo.addRow(fila);
+                modelo.addRow(obj);
 
             }
-            con.close();
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println(e);
         }
 
@@ -127,7 +127,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
         DefaultTableModel table = new DefaultTableModel();
         TablaProductos = new JTable(table);
-        jScrollPane4.setViewportView(TablaProductos);
+        ScrollPaneProductos.setViewportView(TablaProductos);
 
         table.addColumn("id");
         table.addColumn("nombre");
@@ -135,19 +135,19 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         table.addColumn("cantidad");
         table.addColumn("precio");
         table.addColumn("codigo");
-        table.addColumn("id_prove");
+
         table.addColumn("proveedor");
 
         for (Productos producto : productos) {
-            Object[] fila = new Object[8];
+            Object[] fila = new Object[7];
             fila[0] = producto.getId();
             fila[1] = producto.getNombre();
             fila[2] = producto.getDescripcion();
             fila[3] = producto.getCantidad();
             fila[4] = producto.getPrecio();
             fila[5] = producto.getCodigo();
-            fila[6] = producto.getProveedor_id();
-            fila[7] = producto.getProveedor_nombre();
+
+            fila[6] = producto.getProveedor_nombre();
 
             table.addRow(fila);
         }
@@ -199,13 +199,13 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         txtTelefonoCliente = new javax.swing.JTextField();
         txtDireccionCliente = new javax.swing.JTextField();
         txtRazonSocialCliente = new javax.swing.JTextField();
-        ScrollPaneTablaCliente = new javax.swing.JScrollPane();
-        TablaClientes = new javax.swing.JTable();
         btnGuardarCliente = new javax.swing.JButton();
         btnEditarCliente = new javax.swing.JButton();
         btnEliminarCliente = new javax.swing.JButton();
         btnNuevoCliente = new javax.swing.JButton();
         txtIdCliente = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -235,7 +235,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         txtCantidadProductos = new javax.swing.JTextField();
         txtDescripcionProductos = new javax.swing.JTextField();
         txtCodigoProducto = new javax.swing.JTextField();
-        jScrollPane4 = new javax.swing.JScrollPane();
+        ScrollPaneProductos = new javax.swing.JScrollPane();
         TablaProductos = new javax.swing.JTable();
         jButton16 = new javax.swing.JButton();
         jButton17 = new javax.swing.JButton();
@@ -266,7 +266,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txtClienteNombreBusqueda = new javax.swing.JTextField();
         txtClienteVenta = new javax.swing.JTextField();
         txtDireccionClienteVenta = new javax.swing.JTextField();
         txtTelefonoVenta = new javax.swing.JTextField();
@@ -318,6 +318,11 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/ventas.png"))); // NOI18N
+        jLabel2.setMaximumSize(new java.awt.Dimension(124, 124));
+        jLabel2.setMinimumSize(new java.awt.Dimension(124, 124));
+        jLabel2.setPreferredSize(new java.awt.Dimension(124, 124));
+
         jButton22.setText("Ventas");
         jButton22.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -343,15 +348,15 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                             .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(68, 68, 68))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(47, 47, 47))))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(24, 24, 24)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(50, 50, 50)
                 .addComponent(jButton2)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
@@ -363,10 +368,10 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                 .addComponent(jButton22)
                 .addGap(18, 18, 18)
                 .addComponent(jButton5)
-                .addContainerGap(275, Short.MAX_VALUE))
+                .addContainerGap(234, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 0, 220, 720));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 220, 660));
 
         jLabel1.setBackground(new java.awt.Color(255, 204, 204));
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
@@ -462,25 +467,6 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         jPanel9.add(txtDireccionCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 170, 130, -1));
         jPanel9.add(txtRazonSocialCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 210, 130, -1));
 
-        TablaClientes.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "DNI/RUC", "Nombre", "Telefono", "Direccion", "Razon Social"
-            }
-        ));
-        ScrollPaneTablaCliente.setViewportView(TablaClientes);
-        if (TablaClientes.getColumnModel().getColumnCount() > 0) {
-            TablaClientes.getColumnModel().getColumn(0).setPreferredWidth(30);
-            TablaClientes.getColumnModel().getColumn(1).setPreferredWidth(60);
-            TablaClientes.getColumnModel().getColumn(2).setPreferredWidth(30);
-            TablaClientes.getColumnModel().getColumn(3).setPreferredWidth(60);
-            TablaClientes.getColumnModel().getColumn(4).setPreferredWidth(30);
-        }
-
-        jPanel9.add(ScrollPaneTablaCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 70, 510, 210));
-
         btnGuardarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/salvar.png"))); // NOI18N
         btnGuardarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnGuardarCliente.addActionListener(new java.awt.event.ActionListener() {
@@ -512,6 +498,23 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         });
         jPanel9.add(btnNuevoCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 310, -1, -1));
         jPanel9.add(txtIdCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 70, 20, -1));
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "id", "Nombre", "Ruc", "Telefono", "Direccion", "Razon Social"
+            }
+        ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTable1);
+
+        jPanel9.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 50, 660, -1));
 
         jTabbedPane2.addTab("Clientes", jPanel9);
 
@@ -554,6 +557,14 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                 "RUC/DNI", "Nombre", "Telefono", "Direccion", "Razon Social"
             }
         ));
+        TablaProveedores.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaProveedoresMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                TablaProveedoresMouseEntered(evt);
+            }
+        });
         ScrollPaneProveedores.setViewportView(TablaProveedores);
         if (TablaProveedores.getColumnModel().getColumnCount() > 0) {
             TablaProveedores.getColumnModel().getColumn(0).setPreferredWidth(20);
@@ -586,8 +597,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(txtRucProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(txtIdProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addComponent(txtIdProveedor, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -675,7 +685,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                 "Codigo", "Codigo", "Cantidad", "Precio", "Descripcion", "Proveedor"
             }
         ));
-        jScrollPane4.setViewportView(TablaProductos);
+        ScrollPaneProductos.setViewportView(TablaProductos);
         if (TablaProductos.getColumnModel().getColumnCount() > 0) {
             TablaProductos.getColumnModel().getColumn(0).setPreferredWidth(30);
             TablaProductos.getColumnModel().getColumn(1).setPreferredWidth(30);
@@ -760,14 +770,14 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                                .addComponent(txtCodigoProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                                                .addComponent(txtCodigoProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(txtIdProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(2, 2, 2))
                                             .addComponent(TxtNombreProducto)
                                             .addComponent(txtDescripcionProductos))))
                                 .addGap(16, 16, 16)))
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ScrollPaneProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(61, 61, 61))))
         );
         jPanel3Layout.setVerticalGroup(
@@ -798,7 +808,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                             .addComponent(txtPrecioProductos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(22, 22, 22))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                        .addComponent(ScrollPaneProductos, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel25)
@@ -814,7 +824,6 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         );
 
         jTabbedPane2.addTab("Productos", jPanel3);
-        jPanel3.getAccessibleContext().setAccessibleParent(jScrollPane4);
 
         TablaVentas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -839,7 +848,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 928, Short.MAX_VALUE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(btnImprimirPDF)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -889,7 +898,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                                     .addComponent(jLabel26)
                                     .addComponent(jLabel28)
                                     .addComponent(jLabel30))
-                                .addGap(0, 32, Short.MAX_VALUE)))
+                                .addGap(0, 182, Short.MAX_VALUE)))
                         .addGap(106, 106, 106)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel27)
@@ -928,7 +937,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
         jTabbedPane2.addTab("Configuracion", jPanel5);
 
-        getContentPane().add(jTabbedPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 60, 790, 440));
+        getContentPane().add(jTabbedPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 60, 940, 440));
 
         btnImprimirNuevaVenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         getContentPane().add(btnImprimirNuevaVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 530, 60, 50));
@@ -946,7 +955,13 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         jLabel6.setText("Nombre");
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 520, -1, -1));
         getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 550, 40, -1));
-        getContentPane().add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 550, 130, -1));
+
+        txtClienteNombreBusqueda.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtClienteNombreBusquedaActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txtClienteNombreBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 550, 130, -1));
         getContentPane().add(txtClienteVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 550, 10, -1));
 
         txtDireccionClienteVenta.addActionListener(new java.awt.event.ActionListener() {
@@ -992,12 +1007,13 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private void btnGuardarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarClienteActionPerformed
 
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/sistemaventabd", "root", "4123");
-            PreparedStatement pst = con.prepareStatement("INSERT INTO clientes (dni,nombre,telefono,direccion,razon) VALUES (?,?,?,?,?)");
 
-            pst.setInt(1, Integer.parseInt(txtRucCliente.getText()));
-            pst.setString(2, txtNombreCliente.getText());
-            pst.setInt(3, Integer.parseInt(txtTelefonoCliente.getText()));
+            ClientesDAO clienteDAO = new ClientesDAO();
+            PreparedStatement pst = clienteDAO.CrearCliente();
+
+            pst.setString(1, txtNombreCliente.getText());
+            pst.setInt(2, Integer.parseInt(txtRucCliente.getText()));
+            pst.setString(3, txtTelefonoCliente.getText());
             pst.setString(4, txtDireccionCliente.getText());
             pst.setString(5, txtRazonSocialCliente.getText());
 
@@ -1106,6 +1122,37 @@ VALUES ("Huevos",180,27.5,"Carton de huevos", 0002,2);
 
     }//GEN-LAST:event_jButton16ActionPerformed
 
+    private void TablaProveedoresMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaProveedoresMouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel modelo = (DefaultTableModel) TablaProveedores.getModel();
+
+        int fila = TablaProveedores.rowAtPoint(evt.getPoint());
+        JOptionPane.showMessageDialog(TablaProveedores.getParent(), modelo.getValueAt(fila, 0));
+    }//GEN-LAST:event_TablaProveedoresMouseClicked
+
+    private void TablaProveedoresMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaProveedoresMouseEntered
+        JOptionPane.showMessageDialog(null, "funciono");
+
+    }//GEN-LAST:event_TablaProveedoresMouseEntered
+
+    private void txtClienteNombreBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtClienteNombreBusquedaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtClienteNombreBusquedaActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int fila = jTable1.rowAtPoint(evt.getPoint());
+
+        txtIdCliente.setText(jTable1.getValueAt(fila, 0).toString());
+        txtNombreCliente.setText(jTable1.getValueAt(fila, 1).toString());
+        txtRucCliente.setText(jTable1.getValueAt(fila, 2).toString());
+        txtTelefonoCliente.setText(jTable1.getValueAt(fila, 3).toString());
+        txtDireccionCliente.setText(jTable1.getValueAt(fila, 4).toString());
+        txtRazonSocialCliente.setText(jTable1.getValueAt(fila, 5).toString());
+
+
+    }//GEN-LAST:event_jTable1MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -1144,9 +1191,8 @@ VALUES ("Huevos",180,27.5,"Carton de huevos", 0002,2);
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel JLabelNombreProducto;
     private javax.swing.JTable JTableNuevaVenta;
+    private javax.swing.JScrollPane ScrollPaneProductos;
     private javax.swing.JScrollPane ScrollPaneProveedores;
-    private javax.swing.JScrollPane ScrollPaneTablaCliente;
-    private javax.swing.JTable TablaClientes;
     private javax.swing.JTable TablaProductos;
     private javax.swing.JTable TablaProveedores;
     private javax.swing.JTable TablaVentas;
@@ -1212,11 +1258,11 @@ VALUES ("Huevos",180,27.5,"Carton de huevos", 0002,2);
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField21;
     private javax.swing.JTextField jTextField22;
     private javax.swing.JTextField jTextField23;
@@ -1225,6 +1271,7 @@ VALUES ("Huevos",180,27.5,"Carton de huevos", 0002,2);
     private javax.swing.JLabel labelUsuarioRegistrado;
     private javax.swing.JTextField txtCantidadProductos;
     private javax.swing.JTextField txtCantidadVenta;
+    private javax.swing.JTextField txtClienteNombreBusqueda;
     private javax.swing.JTextField txtClienteVenta;
     private javax.swing.JTextField txtCodigoProducto;
     private javax.swing.JTextField txtCodigoVenta;
