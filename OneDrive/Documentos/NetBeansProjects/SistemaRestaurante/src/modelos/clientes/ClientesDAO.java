@@ -57,4 +57,22 @@ public class ClientesDAO {
         }
         return pst;
     }
+    
+    public boolean EliminarCliente(int id){
+        
+        try{
+            String sql = "DELETE FROM clientes WHERE id = ?";
+            Connection con = Conexion.getConnection();
+             pst = con.prepareStatement(sql);
+            
+            pst.setInt(1, id);
+            pst.execute();
+            return true;
+           
+            
+        }catch(SQLException e){
+            System.out.println("Error eliminando cliente" + e);
+            return false;
+        }
+    }
 }
