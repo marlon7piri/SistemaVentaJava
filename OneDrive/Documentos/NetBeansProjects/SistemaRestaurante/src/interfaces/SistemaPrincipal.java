@@ -134,26 +134,26 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         ProductosDAO productDao = new ProductosDAO();
         List<Productos> productos = productDao.VerProductos();
 
-        DefaultTableModel table = new DefaultTableModel();
-        TablaProductos = new JTable(table);
-        ScrollPaneProductos.setViewportView(TablaProductos);
+        DefaultTableModel table = (DefaultTableModel) TablaProductos.getModel();
 
-        table.addColumn("id");
-        table.addColumn("nombre");
-        table.addColumn("descripcion");
-        table.addColumn("cantidad");
-        table.addColumn("precio");
-        table.addColumn("codigo");
-
-        table.addColumn("proveedor");
+        if (table.getColumnCount() == 0) {
+            table.addColumn("id");
+            table.addColumn("nombre");
+            table.addColumn("cantidad");
+            table.addColumn("precio");
+            table.addColumn("descripcion");
+            table.addColumn("codigo");
+            table.addColumn("proveedor");
+        }
 
         for (Productos producto : productos) {
             Object[] fila = new Object[7];
             fila[0] = producto.getId();
             fila[1] = producto.getNombre();
-            fila[2] = producto.getDescripcion();
-            fila[3] = producto.getCantidad();
-            fila[4] = producto.getPrecio();
+            fila[2] = producto.getCantidad();
+            fila[3] = producto.getPrecio();
+            fila[4] = producto.getDescripcion();
+
             fila[5] = producto.getCodigo();
 
             fila[6] = producto.getProveedor_nombre();
@@ -540,7 +540,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         jTabbedPane2.addTab("Clientes", jPanel9);
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 255));
-        jPanel3.setPreferredSize(new java.awt.Dimension(785, 202));
+        jPanel3.setPreferredSize(new java.awt.Dimension(985, 202));
 
         jLabel21.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel21.setText("Codigo:");
@@ -568,17 +568,22 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Codigo", "Codigo", "Cantidad", "Precio", "Descripcion", "Proveedor"
+                "id", "Nombre", "Cantidad", "Precio", "Descripcion", "Codigo", "Proveedor"
             }
         ));
+        TablaProductos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaProductosMouseClicked(evt);
+            }
+        });
         ScrollPaneProductos.setViewportView(TablaProductos);
         if (TablaProductos.getColumnModel().getColumnCount() > 0) {
-            TablaProductos.getColumnModel().getColumn(0).setPreferredWidth(30);
             TablaProductos.getColumnModel().getColumn(1).setPreferredWidth(30);
             TablaProductos.getColumnModel().getColumn(2).setPreferredWidth(30);
             TablaProductos.getColumnModel().getColumn(3).setPreferredWidth(30);
             TablaProductos.getColumnModel().getColumn(4).setPreferredWidth(100);
-            TablaProductos.getColumnModel().getColumn(5).setPreferredWidth(100);
+            TablaProductos.getColumnModel().getColumn(5).setPreferredWidth(30);
+            TablaProductos.getColumnModel().getColumn(6).setPreferredWidth(100);
         }
 
         jButton16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/salvar.png"))); // NOI18N
@@ -589,6 +594,11 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         });
 
         jButton17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/boton-x.png"))); // NOI18N
+        jButton17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton17ActionPerformed(evt);
+            }
+        });
 
         jButton18.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/nuevo-proyecto.png"))); // NOI18N
 
@@ -1205,28 +1215,75 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private void btnEliminarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarClienteActionPerformed
         // TODO add your handling code here:
 
-        int id = Integer.parseInt(txtIdCliente.getText());
-        DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+        String id = txtIdCliente.getText();
 
-        ClientesDAO clienteDao = new ClientesDAO();
+        if (!"".equals(id)) {
+            DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
 
-        int respuesta = JOptionPane.showConfirmDialog(null, "Seguro que desea eliminar el cliente?");
+            ClientesDAO clienteDao = new ClientesDAO();
 
-        if (respuesta == 0) {
-            boolean res = clienteDao.EliminarCliente(id);
-            if (res == true) {
-                JOptionPane.showMessageDialog(null, "Cliente eliminado");
-                LimpiarTablaCliente(modelo);
-                VerClientes();
+            int respuesta = JOptionPane.showConfirmDialog(null, "Seguro que desea eliminar el cliente?");
 
-            } else {
-                JOptionPane.showMessageDialog(null, "Algo sucedio, intente de nuevo");
+            if (respuesta == 0) {
+                boolean res = clienteDao.EliminarCliente(Integer.parseInt(id));
+                if (res == true) {
+                    JOptionPane.showMessageDialog(null, "Cliente eliminado");
+                    LimpiarTablaCliente(modelo);
+                    VerClientes();
 
+                } else {
+                    JOptionPane.showMessageDialog(null, "Algo sucedio, intente de nuevo");
+
+                }
+            }else{
+               JOptionPane.showMessageDialog(null, "Seleccione algun cliente");  
             }
         }
 
 
     }//GEN-LAST:event_btnEliminarClienteActionPerformed
+
+    private void TablaProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaProductosMouseClicked
+        // TODO add your handling code here:
+
+        int fila = TablaProductos.rowAtPoint(evt.getPoint());
+
+        txtIdProductos.setText(TablaProductos.getValueAt(fila, 0).toString());
+        TxtNombreProducto.setText(TablaProductos.getValueAt(fila, 1).toString());
+        txtCantidadProductos.setText(TablaProductos.getValueAt(fila, 2).toString());
+        txtPrecioProductos.setText(TablaProductos.getValueAt(fila, 3).toString());
+        txtDescripcionProductos.setText(TablaProductos.getValueAt(fila, 4).toString());
+
+        txtCodigoProducto.setText(TablaProductos.getValueAt(fila, 5).toString());
+
+        jComboBox1.setSelectedItem(TablaProductos.getValueAt(fila, 6).toString());
+
+
+    }//GEN-LAST:event_TablaProductosMouseClicked
+
+    private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
+        // TODO add your handling code here:
+
+        int id = Integer.parseInt(txtIdProductos.getText());
+        ProductosDAO producDao = new ProductosDAO();
+        DefaultTableModel modelo = (DefaultTableModel) TablaProductos.getModel();
+
+        int respuesta = JOptionPane.showConfirmDialog(null, "Desea eliminar el producto");
+
+        if (respuesta == 0) {
+            boolean res = producDao.EliminarProducto(id);
+            if (res == true) {
+                JOptionPane.showMessageDialog(null, "Producto eliminado");
+                LimpiarTablaCliente(modelo);
+                VerProductos();
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Algo paso, intente de nuevo");
+            }
+        }
+
+
+    }//GEN-LAST:event_jButton17ActionPerformed
 
     /**
      * @param args the command line arguments
