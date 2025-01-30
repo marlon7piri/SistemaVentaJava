@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import modelos.Conexion;
 
-
 public class ClientesDAO {
 
     static PreparedStatement pst;
@@ -19,7 +18,6 @@ public class ClientesDAO {
         List<Clientes> clientes = new ArrayList<>();
 
         try {
-
             Connection con = Conexion.getConnection();
 
             PreparedStatement pst = con.prepareStatement(sql);
@@ -37,6 +35,7 @@ public class ClientesDAO {
                 clientes.add(cliente);
 
             }
+            con.close();
 
         } catch (SQLException error) {
             System.out.println("Error al obtener productos: " + error.getMessage());
@@ -51,27 +50,54 @@ public class ClientesDAO {
             String sql = "INSERT INTO clientes(nombre,ruc,telefono,direccion,razon_social) VALUES (?,?,?,?,?)";
             Connection con = Conexion.getConnection();
             pst = con.prepareStatement(sql);
+            con.close();
 
         } catch (SQLException e) {
             System.out.print("Error creando el producto" + e);
         }
         return pst;
     }
-    
-    public boolean EliminarCliente(int id){
-        
-        try{
+
+    public boolean EliminarCliente(int id) {
+
+        try {
             String sql = "DELETE FROM clientes WHERE id = ?";
             Connection con = Conexion.getConnection();
-             pst = con.prepareStatement(sql);
-            
+            pst = con.prepareStatement(sql);
+
             pst.setInt(1, id);
             pst.execute();
+            con.close();
+
             return true;
-           
-            
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println("Error eliminando cliente" + e);
+            return false;
+        }
+    }
+
+    public boolean ActualizarCliente(int id, Clientes cliente) {
+
+        try {
+            String sql = "UPDATE clientes SET nombre= ?,ruc= ?,telefono= ?,direccion= ?,razon_social= ? WHERE id = ?";
+            Connection con = Conexion.getConnection();
+            PreparedStatement pst = con.prepareStatement(sql);
+
+            pst.setString(1, cliente.getNombre());
+            pst.setInt(2, cliente.getRuc());
+            pst.setString(3, cliente.getTelefono());
+            pst.setString(4, cliente.getDireccion());
+            pst.setString(5, cliente.getRazon_social());
+            pst.setInt(6, id);
+
+            int filasActualizadas = pst.executeUpdate();
+            
+
+            con.close();
+
+            return filasActualizadas > 0;
+        } catch (SQLException e) {
+            System.out.println("Error del servidor" + e.toString());
             return false;
         }
     }

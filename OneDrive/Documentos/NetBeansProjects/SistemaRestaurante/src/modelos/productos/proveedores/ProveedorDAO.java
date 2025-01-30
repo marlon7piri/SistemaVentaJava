@@ -42,4 +42,30 @@ public class ProveedorDAO {
         return proveedores;
     }
 
+    public boolean ActualizarProveedor(int id, Proveedores proveedor) {
+        try {
+            String sql = "UPDATE proveedores SET nombre= ?,ruc= ?,telefono= ?,direccion= ?,razon_social= ? WHERE id = ?";
+            Connection con = Conexion.getConnection();
+            PreparedStatement pst = con.prepareStatement(sql);
+
+            pst.setString(1, proveedor.getNombre());
+            pst.setInt(2, proveedor.getRuc());
+            pst.setString(3, proveedor.getTelefono());
+            pst.setString(4, proveedor.getDireccion());
+            pst.setString(5, proveedor.getRazon_social());
+            pst.setInt(6, id);
+
+            pst.setInt(7, id);
+
+            int filasActualizadas = pst.executeUpdate();
+
+            con.close();
+
+            return filasActualizadas > 0;
+        } catch (SQLException e) {
+            System.out.println("Error del servidor" + e.toString());
+            return false;
+        }
+    }
+
 }
