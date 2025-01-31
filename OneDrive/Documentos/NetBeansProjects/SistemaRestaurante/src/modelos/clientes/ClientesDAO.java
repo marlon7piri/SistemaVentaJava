@@ -11,6 +11,8 @@ import modelos.Conexion;
 public class ClientesDAO {
 
     static PreparedStatement pst;
+    Connection con;
+    ResultSet rs;
 
     public List<Clientes> VerClientes() {
         // Hacemos un JOIN entre productos y proveedores para obtener el nombre del proveedor
@@ -91,7 +93,6 @@ public class ClientesDAO {
             pst.setInt(6, id);
 
             int filasActualizadas = pst.executeUpdate();
-            
 
             con.close();
 
@@ -100,5 +101,29 @@ public class ClientesDAO {
             System.out.println("Error del servidor" + e.toString());
             return false;
         }
+    }
+
+    public Clientes BuscarCliente(int ruc) {
+        Clientes cliente = new Clientes();
+        try {
+            String sql = "SELECT * FROM clientes WHERE ruc =?";
+            con = Conexion.getConnection();
+            pst = con.prepareStatement(sql);
+
+            pst.setInt(1, ruc);
+
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                cliente.setNombre(rs.getString("nombre"));
+                cliente.setRuc(rs.getInt("ruc"));
+
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error del servidor" + e);
+        }
+        return cliente;
+
     }
 }

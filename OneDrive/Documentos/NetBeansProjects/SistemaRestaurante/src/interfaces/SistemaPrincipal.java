@@ -1,10 +1,12 @@
 package interfaces;
 
 import Reportes.Excel;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.sql.*;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -13,6 +15,7 @@ import modelos.login;
 import modelos.productos.Productos;
 import modelos.productos.ProductosDAO;
 import java.util.List;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import modelos.clientes.Clientes;
@@ -21,10 +24,14 @@ import modelos.productos.proveedores.ProveedorDAO;
 import modelos.productos.proveedores.Proveedores;
 
 public class SistemaPrincipal extends javax.swing.JFrame {
-
+    
+    int item;
+    double TotalPagar = 0.00;
+    DefaultTableModel modelo;
+    
     public SistemaPrincipal() {
         initComponents();
-
+        
         Dimension window = Toolkit.getDefaultToolkit().getScreenSize();
         this.setResizable(false);
         this.setSize(window.width, window.height);
@@ -39,18 +46,18 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         VerProveedores();
         VerClientes();
         VerProductos();
-
+        
     }
-
+    
     public void LimpiarTablas(DefaultTableModel modelo) {
-
+        
         for (int i = 0; i < modelo.getRowCount(); i++) {
             modelo.removeRow(i);
             i = i - 1;
         }
-
+        
     }
-
+    
     public void VerClientes() {
         try {
             ClientesDAO clienteDAO = new ClientesDAO();
@@ -58,7 +65,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
             // Obtener el modelo existente de la tabla
             DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
-
+            
             if (modelo.getColumnCount() == 0) {
                 modelo.addColumn("id");
                 modelo.addColumn("nombre");
@@ -67,7 +74,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                 modelo.addColumn("direccion");
                 modelo.addColumn("razon_social");
             }
-
+            
             for (Clientes cliente : clientes) {
                 Object[] obj = new Object[6];
                 obj[0] = cliente.getId();
@@ -76,26 +83,26 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                 obj[3] = cliente.getTelefono();
                 obj[4] = cliente.getDireccion();
                 obj[5] = cliente.getRazon_social();
-
+                
                 modelo.addRow(obj);
-
+                
             }
-
+            
         } catch (Exception e) {
             System.out.println(e);
         }
-
+        
     }
-
+    
     public void VerProveedores() {
         DefaultComboBoxModel<Proveedores> modeloCombo = new DefaultComboBoxModel<>();
         jComboBox1.setModel(modeloCombo);
-
+        
         ProveedorDAO proveedorDao = new ProveedorDAO();
         List<Proveedores> proveedores = proveedorDao.VerProveedor();
-
+        
         DefaultTableModel modelo2 = (DefaultTableModel) TablaProveedores.getModel();
-
+        
         if (modelo2.getColumnCount() == 0) {
             modelo2.addColumn("id");
             modelo2.addColumn("ruc");
@@ -104,9 +111,9 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             modelo2.addColumn("direccion");
             modelo2.addColumn("razon_social");
         }
-
+        
         for (Proveedores proveedor : proveedores) {
-
+            
             Object[] fila = new Object[6];
             fila[0] = proveedor.getId();
             fila[1] = proveedor.getRuc();
@@ -114,21 +121,21 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             fila[3] = proveedor.getTelefono();
             fila[4] = proveedor.getDireccion();
             fila[5] = proveedor.getRazon_social();
-
+            
             modelo2.addRow(fila);
             modeloCombo.addElement(proveedor);
-
+            
         }
-
+        
     }
-
+    
     public void VerProductos() {
-
+        
         ProductosDAO productDao = new ProductosDAO();
         List<Productos> productos = productDao.VerProductos();
-
+        
         DefaultTableModel table = (DefaultTableModel) TablaProductos.getModel();
-
+        
         if (table.getColumnCount() == 0) {
             table.addColumn("id");
             table.addColumn("nombre");
@@ -138,7 +145,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             table.addColumn("codigo");
             table.addColumn("proveedor");
         }
-
+        
         for (Productos producto : productos) {
             Object[] fila = new Object[7];
             fila[0] = producto.getId();
@@ -146,16 +153,16 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             fila[2] = producto.getCantidad();
             fila[3] = producto.getPrecio();
             fila[4] = producto.getDescripcion();
-
+            
             fila[5] = producto.getCodigo();
-
+            
             fila[6] = producto.getProveedor_nombre();
-
+            
             table.addRow(fila);
         }
-
+        
     }
-
+    
     public void LimpiarCliente() {
         txtIdCliente.setText("");
         txtRucCliente.setText("");
@@ -164,7 +171,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         txtDireccionCliente.setText("");
         txtRazonSocialCliente.setText("");
     }
-
+    
     public void LimpiarProducto() {
         TxtNombreProducto.setText("");
         txtCantidadProductos.setText("");
@@ -172,7 +179,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         txtCodigoProducto.setText("");
         txtDescripcionProductos.setText("");
     }
-
+    
     public void LimpiarProveedor() {
         txtIdProveedor.setText("");
         txtRucProveedor.setText("");
@@ -181,7 +188,16 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         txtDireccionProveedor.setText("");
         txtRazonSocialProveedor.setText("");
     }
-
+    
+    public void LimpiarVenta() {
+        txtCodigoVenta.setText("");
+        txtNombreVenta.setText("");
+        txtPrecioVenta.setText("");
+        txtCantidadAComprar.setText("");
+        txtCantidadVenta.setText("");
+        
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -201,7 +217,6 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        btnEliminarVenta = new javax.swing.JButton();
         txtCodigoVenta = new javax.swing.JTextField();
         txtNombreVenta = new javax.swing.JTextField();
         txtCantidadVenta = new javax.swing.JTextField();
@@ -210,6 +225,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         JTableNuevaVenta = new javax.swing.JTable();
         JLabelCantidadVenta = new javax.swing.JLabel();
         txtCantidadAComprar = new javax.swing.JTextField();
+        btnEliminarVenta = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
@@ -285,15 +301,16 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         jButton23 = new javax.swing.JButton();
         btnImprimirNuevaVenta = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        JlabelTotalPagar = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtRucClienteVenta = new javax.swing.JTextField();
         txtClienteNombreBusqueda = new javax.swing.JTextField();
-        txtClienteVenta = new javax.swing.JTextField();
+        txtRazonSocialVenta = new javax.swing.JTextField();
         txtDireccionClienteVenta = new javax.swing.JTextField();
         txtTelefonoVenta = new javax.swing.JTextField();
         labelUsuarioRegistrado = new javax.swing.JLabel();
+        btnCrearVenta = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -414,15 +431,11 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         jLabel9.setText("Nombre");
         jPanel8.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 50, 85, -1));
 
-        jLabel10.setText("Stock");
-        jPanel8.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 50, 85, -1));
+        jLabel10.setText("Stock Disponible");
+        jPanel8.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 50, 100, -1));
 
         jLabel11.setText("Precio");
-        jPanel8.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 50, 85, -1));
-
-        btnEliminarVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/venta-al-por-mayor.png"))); // NOI18N
-        btnEliminarVenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jPanel8.add(btnEliminarVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 80, 50, 40));
+        jPanel8.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 50, 85, -1));
 
         txtCodigoVenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -442,10 +455,10 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             }
         });
         jPanel8.add(txtNombreVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 80, 100, -1));
-        jPanel8.add(txtCantidadVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 80, 50, -1));
+        jPanel8.add(txtCantidadVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 80, 50, -1));
 
         txtPrecioVenta.setEditable(false);
-        jPanel8.add(txtPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 80, 60, -1));
+        jPanel8.add(txtPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 80, 60, -1));
 
         JTableNuevaVenta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -466,14 +479,27 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         jPanel8.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 480, 210));
 
         JLabelCantidadVenta.setText("Cantidad");
-        jPanel8.add(JLabelCantidadVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 50, -1, -1));
+        jPanel8.add(JLabelCantidadVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 50, -1, -1));
 
         txtCantidadAComprar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCantidadAComprarActionPerformed(evt);
             }
         });
-        jPanel8.add(txtCantidadAComprar, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 80, 60, -1));
+        txtCantidadAComprar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCantidadAComprarKeyPressed(evt);
+            }
+        });
+        jPanel8.add(txtCantidadAComprar, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 80, 60, -1));
+
+        btnEliminarVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/boton-x.png"))); // NOI18N
+        btnEliminarVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarVentaActionPerformed(evt);
+            }
+        });
+        jPanel8.add(btnEliminarVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 80, 60, -1));
 
         jTabbedPane2.addTab("Nueva Venta", jPanel8);
 
@@ -1041,15 +1067,21 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         jLabel3.setText("Total a Pagar :");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 540, -1, -1));
 
-        jLabel4.setText("---------");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 540, -1, -1));
+        JlabelTotalPagar.setText("---------");
+        getContentPane().add(JlabelTotalPagar, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 540, -1, -1));
 
         jLabel5.setText("DNI/RUC");
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 520, -1, -1));
 
         jLabel6.setText("Nombre");
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 520, -1, -1));
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 550, 40, -1));
+
+        txtRucClienteVenta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtRucClienteVentaKeyPressed(evt);
+            }
+        });
+        getContentPane().add(txtRucClienteVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 550, 40, -1));
 
         txtClienteNombreBusqueda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1057,7 +1089,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtClienteNombreBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 550, 130, -1));
-        getContentPane().add(txtClienteVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 550, 10, -1));
+        getContentPane().add(txtRazonSocialVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 550, 10, -1));
 
         txtDireccionClienteVenta.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1067,6 +1099,10 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         getContentPane().add(txtDireccionClienteVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 550, 10, -1));
         getContentPane().add(txtTelefonoVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 550, 10, -1));
         getContentPane().add(labelUsuarioRegistrado, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 14, 250, 50));
+
+        btnCrearVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/venta-al-por-mayor.png"))); // NOI18N
+        btnCrearVenta.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        getContentPane().add(btnCrearVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 530, 50, 50));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1096,25 +1132,25 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         if ("".equals(txtIdProductos.getText())) {
             JOptionPane.showMessageDialog(null, "Seleccione un producto");
             return;
-
+            
         }
         int respuesta = JOptionPane.showConfirmDialog(null, "Seguro desea actualizar el producto " + TxtNombreProducto.getText());
-
+        
         if (respuesta == 0) {
             DefaultTableModel modelo = (DefaultTableModel) TablaProductos.getModel();
             ProductosDAO productDAO = new ProductosDAO();
             Productos producto = new Productos();
-
+            
             int id = Integer.parseInt(txtIdProductos.getText());
             String nombre = TxtNombreProducto.getText();
             double precio = Double.parseDouble(txtPrecioProductos.getText());
             int cantidad = Integer.parseInt(txtCantidadProductos.getText());
             String codigo = txtCodigoProducto.getText();
             String descripcion = txtDescripcionProductos.getText();
-
+            
             Proveedores proveedor = (Proveedores) jComboBox1.getSelectedItem();
             int proveedor_id = proveedor.getId();
-
+            
             producto.setId(id);
             producto.setNombre(nombre);
             producto.setPrecio(precio);
@@ -1122,9 +1158,9 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             producto.SetCodigo(codigo);
             producto.setDescripcion(descripcion);
             producto.setProveedor_id(proveedor_id);
-
+            
             boolean res = productDAO.ActualizarProducto(id, producto);
-
+            
             if (res == true) {
                 JOptionPane.showMessageDialog(null, "Producto actualizado");
                 LimpiarTablas(modelo);
@@ -1132,7 +1168,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                 LimpiarProducto();
             } else {
                 JOptionPane.showMessageDialog(null, "Algo paso,intente de nuevo");
-
+                
             }
         }
     }//GEN-LAST:event_jButton20ActionPerformed
@@ -1142,9 +1178,9 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_txtDireccionClienteVentaActionPerformed
 
     private void btnGuardarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarClienteActionPerformed
-
+        
         try {
-
+            
             ClientesDAO clienteDAO = new ClientesDAO();
             PreparedStatement pst = clienteDAO.CrearCliente();
             DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
@@ -1153,40 +1189,40 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             pst.setString(3, txtTelefonoCliente.getText());
             pst.setString(4, txtDireccionCliente.getText());
             pst.setString(5, txtRazonSocialCliente.getText());
-
+            
             pst.execute();
-
+            
             JOptionPane.showMessageDialog(null, "Cliente Registrado correctamente");
             LimpiarTablas(modelo);
             VerClientes();
-
+            
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-
+        
 
     }//GEN-LAST:event_btnGuardarClienteActionPerformed
 
     private void btnGuardarProveedorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarProveedorActionPerformed
         try {
-
+            
             Connection con = Conexion.getConnection();
             PreparedStatement pst = con.prepareStatement("INSERT INTO proveedores  (ruc,nombre,telefono,direccion,razon_social)VALUES (?,?,?,?,?)");
-
+            
             pst.setInt(1, Integer.parseInt(txtRucProveedor.getText()));
             pst.setString(2, txtNombreProveedor.getText());
             pst.setString(3, txtTelefonoProveedor.getText());
             pst.setString(4, txtDireccionProveedor.getText());
             pst.setString(5, txtRazonSocialProveedor.getText());
-
+            
             pst.execute();
-
+            
             JOptionPane.showMessageDialog(null, "Proveedor Registrado correctamente");
-
+            
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-
+        
         VerProveedores();
     }//GEN-LAST:event_btnGuardarProveedorActionPerformed
 
@@ -1216,10 +1252,10 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         if ("".equals(txtIdCliente.getText())) {
             JOptionPane.showMessageDialog(null, "Seleccione un cliente");
             return;
-
+            
         }
         int respuesta = JOptionPane.showConfirmDialog(null, "Seguro desea actualizar el cliente " + txtNombreCliente.getText());
-
+        
         if (respuesta == 0) {
             DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
             ClientesDAO clienteDao = new ClientesDAO();
@@ -1230,16 +1266,16 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             String telefono = txtTelefonoCliente.getText();
             String direccion = txtDireccionCliente.getText();
             String razon_social = txtRazonSocialCliente.getText();
-
+            
             cliente.setId(id);
             cliente.setNombre(nombre);
             cliente.setRuc(ruc);
             cliente.setTelefono(telefono);
             cliente.setDireccion(direccion);
             cliente.setRazon_social(razon_social);
-
+            
             boolean res = clienteDao.ActualizarCliente(cliente.getId(), cliente);
-
+            
             if (res == true) {
                 JOptionPane.showMessageDialog(null, "Cliente actualizado");
                 LimpiarTablas(modelo);
@@ -1247,51 +1283,54 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                 LimpiarCliente();
             } else {
                 JOptionPane.showMessageDialog(null, "Algo paso,intente de nuevo");
-
+                
             }
         }
-
+        
 
     }//GEN-LAST:event_btnEditarClienteActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-
+        
 
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void TxtNombreProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtNombreProductoActionPerformed
 
     }//GEN-LAST:event_TxtNombreProductoActionPerformed
-
+    
 
     private void txtIdProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdProductosActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtIdProductosActionPerformed
 
     private void jButton16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton16ActionPerformed
-
+        
         try {
             ProductosDAO productDao = new ProductosDAO();
-
+            
             PreparedStatement pst = productDao.CrearProducto();
-
+            
             Proveedores seleccionado = (Proveedores) jComboBox1.getSelectedItem();
-
+            modelo = (DefaultTableModel) TablaProductos.getModel();
+            
             pst.setString(1, TxtNombreProducto.getText());
             pst.setInt(2, Integer.parseInt(txtCantidadProductos.getText()));
             pst.setDouble(3, Double.parseDouble(txtPrecioProductos.getText()));
             pst.setString(4, txtDescripcionProductos.getText());
             pst.setString(5, txtCodigoProducto.getText());
             pst.setInt(6, seleccionado.getId());
-
+            
             pst.execute();
-
+            
             JOptionPane.showMessageDialog(null, "Producto creado.");
-
+            
         } catch (SQLException e) {
             System.out.println("Error creando productos");
         }
+        LimpiarTablas(modelo);
         VerProductos();
+        
 
     }//GEN-LAST:event_jButton16ActionPerformed
 
@@ -1299,7 +1338,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         int fila = TablaProveedores.rowAtPoint(evt.getPoint());
-
+        
         txtIdProveedor.setText(TablaProveedores.getValueAt(fila, 0).toString());
         txtNombreProveedor.setText(TablaProveedores.getValueAt(fila, 1).toString());
         txtRucProveedor.setText(TablaProveedores.getValueAt(fila, 2).toString());
@@ -1310,7 +1349,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_TablaProveedoresMouseClicked
 
     private void TablaProveedoresMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaProveedoresMouseEntered
-
+        
 
     }//GEN-LAST:event_TablaProveedoresMouseEntered
 
@@ -1321,14 +1360,14 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
         int fila = jTable1.rowAtPoint(evt.getPoint());
-
+        
         txtIdCliente.setText(jTable1.getValueAt(fila, 0).toString());
         txtNombreCliente.setText(jTable1.getValueAt(fila, 1).toString());
         txtRucCliente.setText(jTable1.getValueAt(fila, 2).toString());
         txtTelefonoCliente.setText(jTable1.getValueAt(fila, 3).toString());
         txtDireccionCliente.setText(jTable1.getValueAt(fila, 4).toString());
         txtRazonSocialCliente.setText(jTable1.getValueAt(fila, 5).toString());
-
+        
 
     }//GEN-LAST:event_jTable1MouseClicked
 
@@ -1338,10 +1377,10 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         if ("".equals(txtIdCliente.getText())) {
             JOptionPane.showMessageDialog(null, "Seleccione un proveedor");
             return;
-
+            
         }
         int respuesta = JOptionPane.showConfirmDialog(null, "Seguro desea actualizar el proveedor " + txtNombreProveedor.getText());
-
+        
         if (respuesta == 0) {
             DefaultTableModel modelo = (DefaultTableModel) TablaProveedores.getModel();
             Proveedores proveedor = new Proveedores();
@@ -1352,16 +1391,16 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             String telefono = txtTelefonoProveedor.getText();
             String direccion = txtDireccionProveedor.getText();
             String razon_social = txtRazonSocialProveedor.getText();
-
+            
             proveedor.setId(id);
             proveedor.setNombre(nombre);
             proveedor.setRuc(ruc);
             proveedor.setTelefono(telefono);
             proveedor.setDireccion(direccion);
             proveedor.setRazon_social(razon_social);
-
+            
             boolean res = proveedorDao.ActualizarProveedor(proveedor.getId(), proveedor);
-
+            
             if (res == true) {
                 JOptionPane.showMessageDialog(null, "Proveedor actualizado");
                 LimpiarTablas(modelo);
@@ -1369,7 +1408,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                 LimpiarProveedor();
             } else {
                 JOptionPane.showMessageDialog(null, "Algo paso,intente de nuevo");
-
+                
             }
         }
     }//GEN-LAST:event_btnEditarProveedorActionPerformed
@@ -1380,27 +1419,27 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         String id = txtIdCliente.getText();
         DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
         ClientesDAO clienteDao = new ClientesDAO();
-
+        
         if (!"".equals(id)) {
-
+            
             int respuesta = JOptionPane.showConfirmDialog(null, "Seguro que desea eliminar el cliente?");
-
+            
             if (respuesta == 0) {
                 boolean res = clienteDao.EliminarCliente(Integer.parseInt(id));
                 if (res == true) {
                     JOptionPane.showMessageDialog(null, "Cliente eliminado");
                     LimpiarTablas(modelo);
                     VerClientes();
-
+                    
                 } else {
                     JOptionPane.showMessageDialog(null, "Algo sucedio, intente de nuevo");
-
+                    
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Seleccione algun cliente");
             }
         }
-
+        
 
     }//GEN-LAST:event_btnEliminarClienteActionPerformed
 
@@ -1408,17 +1447,17 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         int fila = TablaProductos.rowAtPoint(evt.getPoint());
-
+        
         txtIdProductos.setText(TablaProductos.getValueAt(fila, 0).toString());
         TxtNombreProducto.setText(TablaProductos.getValueAt(fila, 1).toString());
         txtCantidadProductos.setText(TablaProductos.getValueAt(fila, 2).toString());
         txtPrecioProductos.setText(TablaProductos.getValueAt(fila, 3).toString());
         txtDescripcionProductos.setText(TablaProductos.getValueAt(fila, 4).toString());
-
+        
         txtCodigoProducto.setText(TablaProductos.getValueAt(fila, 5).toString());
-
+        
         jComboBox1.setSelectedItem(TablaProductos.getValueAt(fila, 6).toString());
-
+        
 
     }//GEN-LAST:event_TablaProductosMouseClicked
 
@@ -1428,28 +1467,28 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         int id = Integer.parseInt(txtIdProductos.getText());
         ProductosDAO producDao = new ProductosDAO();
         DefaultTableModel modelo = (DefaultTableModel) TablaProductos.getModel();
-
+        
         int respuesta = JOptionPane.showConfirmDialog(null, "Desea eliminar el producto");
-
+        
         if (respuesta == 0) {
             boolean res = producDao.EliminarProducto(id);
             if (res == true) {
                 JOptionPane.showMessageDialog(null, "Producto eliminado");
                 LimpiarTablas(modelo);
                 VerProductos();
-
+                
             } else {
                 JOptionPane.showMessageDialog(null, "Algo paso, intente de nuevo");
             }
         }
-
+        
 
     }//GEN-LAST:event_jButton17ActionPerformed
 
     private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
         // TODO add your handling code here:
         Excel.reporte();
-
+        
 
     }//GEN-LAST:event_btnExcelActionPerformed
 
@@ -1458,13 +1497,13 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             System.out.println("Entro aqui");
-           if (!"".equals(txtCodigoVenta.getText())) {
+            if (!"".equals(txtCodigoVenta.getText())) {
                 ProductosDAO productDao = new ProductosDAO();
                 String cod = txtCodigoVenta.getText();
                 Productos producto = productDao.BuscarProducto(cod);
-
+                
                 System.out.println(producto);
-
+                
                 if (producto.getNombre() != null) {
                     txtNombreVenta.setText("" + producto.getNombre());
                     txtPrecioVenta.setText("" + producto.getPrecio());
@@ -1472,10 +1511,13 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                     txtCantidadAComprar.requestFocus();
                 } else {
                     JOptionPane.showMessageDialog(null, "No se encontro");
+                    LimpiarVenta();
+                    txtCodigoVenta.requestFocus();
+                    
                 }
-
+                
             }
-
+            
         }
 
     }//GEN-LAST:event_txtCodigoVentaKeyPressed
@@ -1491,6 +1533,100 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private void txtCodigoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoVentaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCodigoVentaActionPerformed
+
+    private void txtCantidadAComprarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadAComprarKeyPressed
+        // TODO add your handling code here:
+
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            
+            if (!"".equals(txtCantidadAComprar.getText())) {
+                String codigo = txtCodigoVenta.getText();
+                String nombre = txtNombreVenta.getText();
+                int stock = Integer.parseInt(txtCantidadVenta.getText());
+                int cantidad = Integer.parseInt(txtCantidadAComprar.getText());
+                double precio = Double.parseDouble(txtPrecioVenta.getText());
+                double total = cantidad * precio;
+                item = item + 1;
+                DefaultTableModel modelo = (DefaultTableModel) JTableNuevaVenta.getModel();
+                if (stock >= cantidad) {
+                    
+                    for (int i = 0; i < JTableNuevaVenta.getRowCount(); i++) {
+                        
+                        if (JTableNuevaVenta.getValueAt(i, 1).equals(txtNombreVenta.getText())) {
+                            JOptionPane.showMessageDialog(null, "El producto ya existe");
+                            return;
+                        }
+                    }
+                    
+                    ArrayList lista = new ArrayList<>();
+                    lista.add(item);
+                    lista.add(codigo);
+                    lista.add(nombre);
+                    lista.add(cantidad);
+                    lista.add(precio);
+                    lista.add(total);
+                    
+                    Object[] obj = new Object[5];
+                    obj[0] = lista.get(1);
+                    obj[1] = lista.get(2);
+                    obj[2] = lista.get(3);
+                    obj[3] = lista.get(4);
+                    obj[4] = lista.get(5);
+                    
+                    modelo.addRow(obj);
+                    TablaVentas.setModel(modelo);
+                    CalcularTotalPagar();
+                    LimpiarVenta();
+                    txtCodigoVenta.requestFocus();
+                    
+                } else {
+                    JOptionPane.showMessageDialog(null, "No hay productos en stock");
+                    
+                }
+                
+            } else {
+                JOptionPane.showMessageDialog(null, "Introduce la cantidad");
+            }
+            
+        }
+    }//GEN-LAST:event_txtCantidadAComprarKeyPressed
+
+    private void btnEliminarVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarVentaActionPerformed
+        // TODO add your handling code here:
+
+        modelo = (DefaultTableModel) JTableNuevaVenta.getModel();
+        
+        modelo.removeRow(JTableNuevaVenta.getSelectedRow());
+        CalcularTotalPagar();
+        txtCodigoVenta.requestFocus();
+        
+
+    }//GEN-LAST:event_btnEliminarVentaActionPerformed
+
+    private void txtRucClienteVentaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRucClienteVentaKeyPressed
+        // TODO add your handling code here:
+
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            String ruc = txtRucClienteVenta.getText();
+            if (!"".equals(ruc)) {
+                ClientesDAO clientesDao = new ClientesDAO();
+                Clientes cliente = clientesDao.BuscarCliente(Integer.parseInt(ruc));
+                if (cliente.getNombre() != null) {
+                    txtClienteNombreBusqueda.setText(cliente.getNombre());
+                    txtRazonSocialVenta.setText(cliente.getRazon_social());
+                    txtDireccionClienteVenta.setText(cliente.getDireccion());
+                    txtTelefonoVenta.setText(cliente.getTelefono());
+                } else {
+                    JOptionPane.showMessageDialog(null, "El cliente no existe");
+                }
+                
+            } else {
+                JOptionPane.showMessageDialog(null, "Escriba un ruc o dni");
+                txtRucClienteVenta.setText("");
+                txtClienteNombreBusqueda.setText("");
+            }
+        }
+    }//GEN-LAST:event_txtRucClienteVentaKeyPressed
 
     /**
      * @param args the command line arguments
@@ -1531,12 +1667,14 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel JLabelCantidadVenta;
     private javax.swing.JLabel JLabelNombreProducto;
     private javax.swing.JTable JTableNuevaVenta;
+    private javax.swing.JLabel JlabelTotalPagar;
     private javax.swing.JScrollPane ScrollPaneProductos;
     private javax.swing.JScrollPane ScrollPaneProveedores;
     private javax.swing.JTable TablaProductos;
     private javax.swing.JTable TablaProveedores;
     private javax.swing.JTable TablaVentas;
     private javax.swing.JTextField TxtNombreProducto;
+    private javax.swing.JButton btnCrearVenta;
     private javax.swing.JButton btnEditarCliente;
     private javax.swing.JButton btnEditarProveedor;
     private javax.swing.JButton btnEliminarCliente;
@@ -1585,7 +1723,6 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -1603,7 +1740,6 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField21;
     private javax.swing.JTextField jTextField22;
     private javax.swing.JTextField jTextField23;
@@ -1614,7 +1750,6 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField txtCantidadProductos;
     private javax.swing.JTextField txtCantidadVenta;
     private javax.swing.JTextField txtClienteNombreBusqueda;
-    private javax.swing.JTextField txtClienteVenta;
     private javax.swing.JTextField txtCodigoProducto;
     private javax.swing.JTextField txtCodigoVenta;
     private javax.swing.JTextField txtDescripcionProductos;
@@ -1631,10 +1766,26 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField txtPrecioVenta;
     private javax.swing.JTextField txtRazonSocialCliente;
     private javax.swing.JTextField txtRazonSocialProveedor;
+    private javax.swing.JTextField txtRazonSocialVenta;
     private javax.swing.JTextField txtRucCliente;
+    private javax.swing.JTextField txtRucClienteVenta;
     private javax.swing.JTextField txtRucProveedor;
     private javax.swing.JTextField txtTelefonoCliente;
     private javax.swing.JTextField txtTelefonoProveedor;
     private javax.swing.JTextField txtTelefonoVenta;
     // End of variables declaration//GEN-END:variables
+
+    private void CalcularTotalPagar() {
+        
+        TotalPagar = 0.00;
+        
+        for (int i = 0; i < JTableNuevaVenta.getModel().getRowCount(); i++) {
+            
+            double can = Double.parseDouble(String.valueOf(JTableNuevaVenta.getValueAt(i, 4)));
+            
+            TotalPagar = TotalPagar + can;
+            
+        }
+        JlabelTotalPagar.setText(String.format("%.2f", TotalPagar));
+    }
 }
