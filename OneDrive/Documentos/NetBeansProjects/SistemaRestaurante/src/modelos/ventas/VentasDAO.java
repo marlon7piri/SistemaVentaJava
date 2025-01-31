@@ -43,5 +43,12 @@ public class VentasDAO {
             return false;
         }
     }
+    
+    
+    public int getIdVenta (){
+        
+        
+        return 8;
+    }
 
 }

@@ -117,6 +117,7 @@ public class ClientesDAO {
             while (rs.next()) {
                 cliente.setNombre(rs.getString("nombre"));
                 cliente.setRuc(rs.getInt("ruc"));
+                cliente.setId(rs.getInt("id"));
 
             }
 
