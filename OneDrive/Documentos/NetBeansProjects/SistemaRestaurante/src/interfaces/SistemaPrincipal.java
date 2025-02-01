@@ -207,6 +207,15 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
     }
 
+    public void LimpiarClienteVenta() {
+        txtClienteNombreBusqueda.setText("");
+        txtRazonSocialVenta.setText("");
+        txtDireccionClienteVenta.setText("");
+        txtTelefonoVenta.setText("");
+        txtIdClienteVenta.setText("");
+
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1617,10 +1626,14 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         modelo = (DefaultTableModel) JTableNuevaVenta.getModel();
-
-        modelo.removeRow(JTableNuevaVenta.getSelectedRow());
-        CalcularTotalPagar();
-        txtCodigoVenta.requestFocus();
+        int filaSelected = JTableNuevaVenta.getSelectedRow();
+        if (filaSelected >= 0) {
+            modelo.removeRow(JTableNuevaVenta.getSelectedRow());
+            CalcularTotalPagar();
+            txtCodigoVenta.requestFocus();
+        } else {
+            JOptionPane.showMessageDialog(null, "Seleccione una producto a eliminar de la venta");
+        }
 
 
     }//GEN-LAST:event_btnEliminarVentaActionPerformed
@@ -1659,6 +1672,16 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
         RegistrarVenta();
         RegistrarDetalles();
+        ActualizarStock();
+        modelo = (DefaultTableModel) TablaVentas.getModel();
+        DefaultTableModel modelo2 = (DefaultTableModel) TablaProductos.getModel();
+
+        LimpiarTablas(modelo);
+
+        LimpiarTablas(modelo2);
+        VerProductos();
+        LimpiarClienteVenta();
+
     }//GEN-LAST:event_btnCrearVentaActionPerformed
 
     private void txtTelefonoVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTelefonoVentaActionPerformed
@@ -1832,17 +1855,22 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     }
 
     private void RegistrarVenta() {
-        venta.setTotal(TotalPagar);
-        venta.setCliente(Integer.parseInt(txtIdClienteVenta.getText()));
-        venta.setVendedor("Mi empresa");
+        if (TotalPagar != 0 && !"".equals(txtIdClienteVenta.getText())) {
+            venta.setTotal(TotalPagar);
+            venta.setCliente(Integer.parseInt(txtIdClienteVenta.getText()));
+            venta.setVendedor("Mi empresa");
 
-        boolean res = ventasDao.CrearVenta(venta);
+            boolean res = ventasDao.CrearVenta(venta);
 
-        if (res == true) {
-            JOptionPane.showMessageDialog(null, "Venta creada");
+            if (res == true) {
+                JOptionPane.showMessageDialog(null, "Venta creada");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error, intente de nuevo");
+            }
         } else {
-            JOptionPane.showMessageDialog(null, "Error, intente de nuevo");
+            JOptionPane.showMessageDialog(null, "No tiene productos que vender o ningun cliente seleccionado");
         }
+
     }
 
     private void RegistrarDetalles() {
@@ -1851,13 +1879,29 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             int codigo = Integer.parseInt(TablaVentas.getValueAt(i, 0).toString());
             int cantidad = Integer.parseInt(TablaVentas.getValueAt(i, 2).toString());
             double precio = Double.parseDouble(TablaVentas.getValueAt(i, 3).toString());
+            int id;
+            id = ventasDao.getIdVenta();
 
-            int id = 13;
             detalles.setCodigo_prod(codigo);
             detalles.setPrecio(precio);
             detalles.setCantidad(cantidad);
             detalles.setId(id);
             detallesDao.RegistrarDetalles(detalles);
+
+        }
+    }
+
+    private void ActualizarStock() {
+
+        for (int i = 0; i < TablaVentas.getRowCount(); i++) {
+
+            String codigo = TablaVentas.getValueAt(i, 0).toString();
+            int cantidad = Integer.parseInt(TablaVentas.getValueAt(i, 2).toString());
+
+            Productos producto = productDao.BuscarProducto(codigo);
+            int StockActual = producto.getCantidad() - cantidad;
+
+            ventasDao.ActualizarStock(StockActual, Integer.parseInt(codigo));
 
         }
     }
