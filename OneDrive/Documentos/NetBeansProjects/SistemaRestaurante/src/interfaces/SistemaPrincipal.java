@@ -295,6 +295,12 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         JLabelNombreProducto = new javax.swing.JLabel();
         TxtNombreProducto = new javax.swing.JTextField();
         btnExcel = new javax.swing.JButton();
+        txtBusquedaProductoNombre = new javax.swing.JTextField();
+        txtBusquedaProductoCodigo = new javax.swing.JTextField();
+        jLabel31 = new javax.swing.JLabel();
+        jLabel32 = new javax.swing.JLabel();
+        btnBuscarProducto = new javax.swing.JButton();
+        btnLimpiarFiltros = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
@@ -434,7 +440,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
         jLabel1.setBackground(new java.awt.Color(255, 204, 204));
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 255));
+        jLabel1.setForeground(new java.awt.Color(51, 51, 51));
         jLabel1.setText("Punto de Venta");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 0, 380, 60));
 
@@ -776,6 +782,30 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        txtBusquedaProductoCodigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBusquedaProductoCodigoActionPerformed(evt);
+            }
+        });
+
+        jLabel31.setText("Nombre");
+
+        jLabel32.setText("Codigo");
+
+        btnBuscarProducto.setText("Buscar");
+        btnBuscarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarProductoActionPerformed(evt);
+            }
+        });
+
+        btnLimpiarFiltros.setText("Limpiar");
+        btnLimpiarFiltros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarFiltrosActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -803,7 +833,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                                         .addComponent(JButonActualizarProducto)))
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addGap(529, 529, 529))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(JLabelNombreProducto)
@@ -824,21 +854,45 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                                             .addComponent(jLabel22))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                            .addComponent(TxtNombreProducto)
+                                            .addComponent(txtDescripcionProductos)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                                                 .addComponent(txtCodigoProducto, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(txtIdProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(2, 2, 2))
-                                            .addComponent(TxtNombreProducto)
-                                            .addComponent(txtDescripcionProductos))))
+                                                .addGap(2, 2, 2)))))
                                 .addGap(16, 16, 16)))
-                        .addComponent(ScrollPaneProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 507, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(ScrollPaneProductos, javax.swing.GroupLayout.PREFERRED_SIZE, 507, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(jLabel31)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtBusquedaProductoNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel32)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtBusquedaProductoCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnBuscarProducto, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnLimpiarFiltros)
+                                .addGap(20, 20, 20))))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addGap(9, 9, 9)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBusquedaProductoNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBusquedaProductoCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel31)
+                    .addComponent(jLabel32)
+                    .addComponent(btnBuscarProducto)
+                    .addComponent(btnLimpiarFiltros))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -877,7 +931,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton18)
                     .addComponent(btnExcel))
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Productos", jPanel3);
@@ -1528,12 +1582,10 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            System.out.println("Entro aqui");
+
             if (!"".equals(txtCodigoVenta.getText())) {
                 String cod = txtCodigoVenta.getText();
                 Productos producto = productDao.BuscarProducto(cod);
-
-                System.out.println(producto);
 
                 if (producto.getNombre() != null) {
                     txtNombreVenta.setText("" + producto.getNombre());
@@ -1692,6 +1744,47 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtRucClienteVentaActionPerformed
 
+    private void txtBusquedaProductoCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaProductoCodigoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBusquedaProductoCodigoActionPerformed
+
+    private void btnBuscarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarProductoActionPerformed
+        // TODO add your handling code here:
+
+        String cod = txtBusquedaProductoCodigo.getText();
+        String nombre = txtBusquedaProductoNombre.getText();
+
+        List<Productos> productos = productDao.FiltrarProductos(cod, nombre);
+
+        DefaultTableModel modelo = (DefaultTableModel) TablaProductos.getModel();
+
+        LimpiarTablas(modelo);
+        for (Productos producto : productos) {
+            Object[] obj = new Object[7];
+            obj[0] = producto.getId();
+            obj[1] = producto.getNombre();
+            obj[2] = producto.getCantidad();
+            obj[3] = producto.getPrecio();
+            obj[4] = producto.getDescripcion();
+            obj[5] = producto.getCodigo();
+            obj[6] = producto.getProveedor_nombre();
+            modelo.addRow(obj);
+
+        }
+
+
+    }//GEN-LAST:event_btnBuscarProductoActionPerformed
+
+    private void btnLimpiarFiltrosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarFiltrosActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel modelo = (DefaultTableModel) TablaProductos.getModel();
+
+        LimpiarTablas(modelo);
+        VerProductos();
+        txtBusquedaProductoCodigo.setText("");
+        txtBusquedaProductoNombre.setText("");
+    }//GEN-LAST:event_btnLimpiarFiltrosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1739,6 +1832,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTable TablaProveedores;
     private javax.swing.JTable TablaVentas;
     private javax.swing.JTextField TxtNombreProducto;
+    private javax.swing.JButton btnBuscarProducto;
     private javax.swing.JButton btnCrearVenta;
     private javax.swing.JButton btnEditarCliente;
     private javax.swing.JButton btnEditarProveedor;
@@ -1749,6 +1843,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnGuardarCliente;
     private javax.swing.JButton btnGuardarProveedor;
     private javax.swing.JButton btnImprimirPDF;
+    private javax.swing.JButton btnLimpiarFiltros;
     private javax.swing.JButton btnNuevoCliente;
     private javax.swing.JButton btnNuevoProveedor;
     private javax.swing.JButton jButton1;
@@ -1786,6 +1881,8 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -1810,6 +1907,8 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField24;
     private javax.swing.JTextField jTextField25;
     private javax.swing.JLabel labelUsuarioRegistrado;
+    private javax.swing.JTextField txtBusquedaProductoCodigo;
+    private javax.swing.JTextField txtBusquedaProductoNombre;
     private javax.swing.JTextField txtCantidadAComprar;
     private javax.swing.JTextField txtCantidadProductos;
     private javax.swing.JTextField txtCantidadVenta;

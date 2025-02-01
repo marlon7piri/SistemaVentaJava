@@ -70,8 +70,8 @@ public class ProductosDAO {
 
         try {
             String sql = "DELETE FROM productos WHERE id = ?";
-             con = Conexion.getConnection();
-             pst = con.prepareStatement(sql);
+            con = Conexion.getConnection();
+            pst = con.prepareStatement(sql);
             pst.setInt(1, id);
             pst.execute();
             return true;
@@ -113,11 +113,11 @@ public class ProductosDAO {
 
         try {
             String sql = "SELECT * FROM productos WHERE codigo =?";
-             con = Conexion.getConnection();
-             pst = con.prepareStatement(sql);
+            con = Conexion.getConnection();
+            pst = con.prepareStatement(sql);
 
             pst.setString(1, codigo);
-             rs = pst.executeQuery();
+            rs = pst.executeQuery();
 
             while (rs.next()) {
                 producto.setNombre(rs.getString("nombre"));
@@ -130,6 +130,43 @@ public class ProductosDAO {
             System.out.println(e.toString());
         }
         return producto;
+
+    }
+
+    public List<Productos> FiltrarProductos(String codigo, String nombre) {
+
+        List<Productos> productos = new ArrayList<>();
+        try {
+            String sql = "SELECT p.id, p.nombre, p.descripcion, p.cantidad, p.precio, p.codigo, p.proveedor_id, prov.nombre AS proveedor_nombre "
+                    + "FROM productos p  INNER JOIN proveedores prov ON prov.id = p.proveedor_id WHERE p.codigo LIKE ? AND p.nombre LIKE ?";
+
+            con = Conexion.getConnection();
+            pst = con.prepareStatement(sql);
+            pst.setString(1, "%" + codigo + "%");
+            pst.setString(2, "%" + nombre + "%");
+
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+
+                Productos producto = new Productos();
+                producto.setId(rs.getInt("id"));
+                producto.setNombre(rs.getString("nombre"));
+                producto.setDescripcion(rs.getString("descripcion"));
+                producto.setCantidad(rs.getInt("cantidad"));
+                producto.setPrecio(rs.getInt("precio"));
+                producto.SetCodigo(rs.getString("codigo"));
+                producto.setProveedor_id(rs.getInt("proveedor_id"));
+                producto.setProveedor_nombre(rs.getString("proveedor_nombre"));
+
+                productos.add(producto);
+
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error buscando productos" + e);
+        }
+        return productos;
 
     }
 }
