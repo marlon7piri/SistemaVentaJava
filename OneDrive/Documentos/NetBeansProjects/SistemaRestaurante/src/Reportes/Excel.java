@@ -36,7 +36,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Excel {
 
-    public static void reporte() {
+    public static void reporte( String sql,String nombreArchivo) {
 
         Workbook book = new XSSFWorkbook();
         Sheet sheet = book.createSheet("Productos");
@@ -98,7 +98,6 @@ public class Excel {
             }
 
             Conexion con = new Conexion();
-            PreparedStatement ps;
             ResultSet rs;
             Connection conn = con.getConnection();
 
@@ -110,9 +109,7 @@ public class Excel {
             datosEstilo.setBorderRight(BorderStyle.THIN);
             datosEstilo.setBorderBottom(BorderStyle.THIN);
 
-            ps = conn.prepareStatement("SELECT p.codigo, p.nombre, "
-                    + "p.precio, p.cantidad,pr.nombre AS proveedor FROM productos p "
-                    + "INNER JOIN proveedores pr ON pr.id = p.proveedor_id");
+           PreparedStatement ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
 
             int numCol = rs.getMetaData().getColumnCount();
@@ -137,7 +134,7 @@ public class Excel {
             sheet.autoSizeColumn(5);
 
             sheet.setZoom(150);
-            String fileName = "productos";
+            String fileName = nombreArchivo;
             String home = System.getProperty("user.home");
             File file = new File(home + "/Downloads/" + fileName + ".xlsx");
             FileOutputStream fileOut = new FileOutputStream(file);

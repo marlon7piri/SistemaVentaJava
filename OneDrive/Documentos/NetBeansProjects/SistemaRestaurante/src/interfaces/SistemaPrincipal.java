@@ -57,6 +57,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         VerProveedores();
         VerClientes();
         VerProductos();
+        VerVentas();
 
     }
 
@@ -170,6 +171,31 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             table.addRow(fila);
         }
 
+    }
+
+    public void VerVentas() {
+
+        List<Ventas> ventas = ventasDao.VerVentas();
+        DefaultTableModel modelo = (DefaultTableModel) TablaVentas.getModel();
+
+        if (modelo.getColumnCount() == 0) {
+            modelo.addColumn("id");
+            modelo.addColumn("cliente");
+            modelo.addColumn("vendedor");
+            modelo.addColumn("fecha");
+            modelo.addColumn("total");
+
+        }
+
+        for (Ventas venta : ventas) {
+            Object[] fila = new Object[5];
+            fila[0] = venta.getId();
+            fila[1] = venta.getCliente();
+            fila[2] = venta.getVendedor();
+            fila[3] = venta.getFecha();
+            fila[4] = venta.getTotal();
+            modelo.addRow(fila);
+        }
     }
 
     public void LimpiarCliente() {
@@ -323,6 +349,9 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         jScrollPane5 = new javax.swing.JScrollPane();
         TablaVentas = new javax.swing.JTable();
         btnImprimirPDF = new javax.swing.JButton();
+        btnVerDetallesCuenta = new javax.swing.JButton();
+        txtIdVenta = new javax.swing.JTextField();
+        txtFechaVenta = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
         jLabel26 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
@@ -1087,18 +1116,30 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Cliente", "Vendedor", "Total"
+                "ID", "Cliente", "Vendedor", "Fecha", "Total"
             }
         ));
+        TablaVentas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TablaVentasMouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(TablaVentas);
         if (TablaVentas.getColumnModel().getColumnCount() > 0) {
             TablaVentas.getColumnModel().getColumn(0).setPreferredWidth(20);
             TablaVentas.getColumnModel().getColumn(1).setPreferredWidth(60);
             TablaVentas.getColumnModel().getColumn(2).setPreferredWidth(60);
-            TablaVentas.getColumnModel().getColumn(3).setPreferredWidth(60);
+            TablaVentas.getColumnModel().getColumn(4).setPreferredWidth(60);
         }
 
         btnImprimirPDF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/pdf.png"))); // NOI18N
+
+        btnVerDetallesCuenta.setText("Ver detalles");
+        btnVerDetallesCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerDetallesCuentaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -1106,8 +1147,15 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(31, 31, 31)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnImprimirPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(btnImprimirPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(144, 144, 144)
+                        .addComponent(txtIdVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtFechaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVerDetallesCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 596, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(313, Short.MAX_VALUE))
         );
@@ -1115,10 +1163,15 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGap(33, 33, 33)
-                .addComponent(btnImprimirPDF)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnImprimirPDF)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnVerDetallesCuenta)
+                        .addComponent(txtIdVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtFechaVenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(236, Short.MAX_VALUE))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(80, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Ventas", jPanel4);
@@ -1573,7 +1626,12 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
     private void btnExcelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcelActionPerformed
         // TODO add your handling code here:
-        Excel.reporte();
+
+        String sql = "SELECT p.codigo, p.nombre, "
+                + "p.precio, p.cantidad,pr.nombre AS proveedor FROM productos p "
+                + "INNER JOIN proveedores pr ON pr.id = p.proveedor_id";
+
+        Excel.reporte(sql, "productos");
 
 
     }//GEN-LAST:event_btnExcelActionPerformed
@@ -1733,6 +1791,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         LimpiarTablas(modelo2);
         VerProductos();
         LimpiarClienteVenta();
+          VerVentas();
 
     }//GEN-LAST:event_btnCrearVentaActionPerformed
 
@@ -1784,6 +1843,27 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         txtBusquedaProductoCodigo.setText("");
         txtBusquedaProductoNombre.setText("");
     }//GEN-LAST:event_btnLimpiarFiltrosActionPerformed
+
+    private void btnVerDetallesCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerDetallesCuentaActionPerformed
+        // TODO add your handling code here:
+
+        new VistaDetalles(txtFechaVenta.getText(), txtIdVenta.getText()).setVisible(true);
+    }//GEN-LAST:event_btnVerDetallesCuentaActionPerformed
+
+    private void TablaVentasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TablaVentasMouseClicked
+        // TODO add your handling code here:
+
+        int filaSelected = TablaVentas.rowAtPoint(evt.getPoint());
+
+        if (filaSelected >= 0) {
+            int id = Integer.parseInt(TablaVentas.getValueAt(filaSelected, 0).toString());
+            String fecha = TablaVentas.getValueAt(filaSelected, 3).toString();
+
+            txtIdVenta.setText(String.valueOf(id));
+            txtFechaVenta.setText(fecha);
+
+        }
+    }//GEN-LAST:event_TablaVentasMouseClicked
 
     /**
      * @param args the command line arguments
@@ -1846,6 +1926,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnLimpiarFiltros;
     private javax.swing.JButton btnNuevoCliente;
     private javax.swing.JButton btnNuevoProveedor;
+    private javax.swing.JButton btnVerDetallesCuenta;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton17;
@@ -1919,10 +2000,12 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField txtDireccionCliente;
     private javax.swing.JTextField txtDireccionClienteVenta;
     private javax.swing.JTextField txtDireccionProveedor;
+    private javax.swing.JTextField txtFechaVenta;
     private javax.swing.JTextField txtIdCliente;
     private javax.swing.JTextField txtIdClienteVenta;
     private javax.swing.JTextField txtIdProductos;
     private javax.swing.JTextField txtIdProveedor;
+    private javax.swing.JTextField txtIdVenta;
     private javax.swing.JTextField txtNombreCliente;
     private javax.swing.JTextField txtNombreProveedor;
     private javax.swing.JTextField txtNombreVenta;

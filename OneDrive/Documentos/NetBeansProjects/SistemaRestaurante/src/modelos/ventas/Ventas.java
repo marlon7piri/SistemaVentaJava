@@ -5,8 +5,16 @@ import java.util.Date;
 
 
 public class Ventas {
-    
+    private int id;
     private int cliente;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
     private String vendedor;
     private double total;
     private Date fecha;
