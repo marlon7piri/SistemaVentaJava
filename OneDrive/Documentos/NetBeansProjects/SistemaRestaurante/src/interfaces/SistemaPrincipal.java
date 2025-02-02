@@ -22,6 +22,8 @@ import modelos.clientes.Clientes;
 import modelos.clientes.ClientesDAO;
 import modelos.detalles.Detalles;
 import modelos.detalles.DetallesDAO;
+import modelos.empresa.Empresa;
+import modelos.empresa.EmpresaDAO;
 import modelos.productos.proveedores.ProveedorDAO;
 import modelos.productos.proveedores.Proveedores;
 import modelos.ventas.Ventas;
@@ -39,6 +41,8 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     DetallesDAO detallesDao = new DetallesDAO();
     Detalles detalles = new Detalles();
     Ventas venta = new Ventas();
+    Empresa empresa = new Empresa();
+    EmpresaDAO empresaDAO = new EmpresaDAO();
 
     public SistemaPrincipal() {
         initComponents();
@@ -46,6 +50,8 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         //Dimension window = Toolkit.getDefaultToolkit().getScreenSize();
         this.setResizable(false);
         this.setSize(1200, 600);
+        txtIdVenta.setVisible(false);
+        txtFechaVenta.setVisible(false);
         // setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         // Centrar la ventana en la pantalla (aunque esté maximizada)
@@ -58,6 +64,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         VerClientes();
         VerProductos();
         VerVentas();
+        VerEmpresa();
 
     }
 
@@ -241,6 +248,12 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         txtIdClienteVenta.setText("");
 
     }
+    public void VerEmpresa(){
+        int id = 1;
+        empresa= empresaDAO.VerEmpresa(id);
+        System.out.println(empresa);
+        labelNombreEmpresa.setText(empresa.getNombre());
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -254,7 +267,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jButton22 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        labelNombreEmpresa = new javax.swing.JLabel();
         jTabbedPane2 = new javax.swing.JTabbedPane();
         jPanel8 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
@@ -358,12 +371,12 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         jLabel28 = new javax.swing.JLabel();
         jLabel29 = new javax.swing.JLabel();
         jLabel30 = new javax.swing.JLabel();
-        jTextField21 = new javax.swing.JTextField();
-        jTextField22 = new javax.swing.JTextField();
-        jTextField23 = new javax.swing.JTextField();
-        jTextField24 = new javax.swing.JTextField();
-        jTextField25 = new javax.swing.JTextField();
-        jButton23 = new javax.swing.JButton();
+        txtRucEmpresa = new javax.swing.JTextField();
+        txtNombreEmpresa = new javax.swing.JTextField();
+        txtDireccionEmpresa = new javax.swing.JTextField();
+        txtTelefonoEmpresa = new javax.swing.JTextField();
+        txtRazonSocialEmpresa = new javax.swing.JTextField();
+        btnActualizarEmpresa = new javax.swing.JButton();
         labelUsuarioRegistrado = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -467,11 +480,11 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 220, 660));
 
-        jLabel1.setBackground(new java.awt.Color(255, 204, 204));
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel1.setText("Punto de Venta");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 0, 380, 60));
+        labelNombreEmpresa.setBackground(new java.awt.Color(255, 204, 204));
+        labelNombreEmpresa.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
+        labelNombreEmpresa.setForeground(new java.awt.Color(51, 51, 51));
+        labelNombreEmpresa.setText("Punto de Venta");
+        getContentPane().add(labelNombreEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 0, 380, 60));
 
         jTabbedPane2.setBackground(new java.awt.Color(255, 255, 255));
         jTabbedPane2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -1188,7 +1201,12 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
         jLabel30.setText("Razon Social");
 
-        jButton23.setText("Actualizar");
+        btnActualizarEmpresa.setText("Actualizar");
+        btnActualizarEmpresa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarEmpresaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -1197,12 +1215,12 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton23)
+                    .addComponent(btnActualizarEmpresa)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField23)
-                            .addComponent(jTextField25)
-                            .addComponent(jTextField21)
+                            .addComponent(txtDireccionEmpresa)
+                            .addComponent(txtRazonSocialEmpresa)
+                            .addComponent(txtRucEmpresa)
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel26)
@@ -1213,8 +1231,8 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel27)
                             .addComponent(jLabel29)
-                            .addComponent(jTextField22, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                            .addComponent(jTextField24))))
+                            .addComponent(txtNombreEmpresa, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+                            .addComponent(txtTelefonoEmpresa))))
                 .addGap(442, 442, 442))
         );
         jPanel5Layout.setVerticalGroup(
@@ -1226,22 +1244,22 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                     .addComponent(jLabel27))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField22, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField21, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNombreEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtRucEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(41, 41, 41)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel28)
                     .addComponent(jLabel29))
                 .addGap(29, 29, 29)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField24, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField23, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTelefonoEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDireccionEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
                 .addComponent(jLabel30)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtRazonSocialEmpresa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
-                .addComponent(jButton23)
+                .addComponent(btnActualizarEmpresa)
                 .addContainerGap(71, Short.MAX_VALUE))
         );
 
@@ -1791,7 +1809,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         LimpiarTablas(modelo2);
         VerProductos();
         LimpiarClienteVenta();
-          VerVentas();
+        VerVentas();
 
     }//GEN-LAST:event_btnCrearVentaActionPerformed
 
@@ -1865,6 +1883,26 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_TablaVentasMouseClicked
 
+    private void btnActualizarEmpresaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarEmpresaActionPerformed
+        // TODO add your handling code here:
+
+        String nombre = txtNombreEmpresa.getText();
+        int ruc = Integer.parseInt(txtRucEmpresa.getText());
+        String direccion = txtDireccionEmpresa.getText();
+        String razon_social = txtRazonSocialEmpresa.getText();
+        String telefono = txtTelefonoEmpresa.getText();
+
+        empresa.setRuc(ruc);
+        empresa.setNombre(nombre);
+        empresa.setDireccion(direccion);
+        empresa.setRazon_social(razon_social);
+        empresa.setTelefono(telefono);
+
+        empresaDAO.CrearEmpresa(empresa);
+
+
+    }//GEN-LAST:event_btnActualizarEmpresaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1879,16 +1917,24 @@ public class SistemaPrincipal extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SistemaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SistemaPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SistemaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SistemaPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SistemaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SistemaPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SistemaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SistemaPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -1912,6 +1958,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTable TablaProveedores;
     private javax.swing.JTable TablaVentas;
     private javax.swing.JTextField TxtNombreProducto;
+    private javax.swing.JButton btnActualizarEmpresa;
     private javax.swing.JButton btnBuscarProducto;
     private javax.swing.JButton btnCrearVenta;
     private javax.swing.JButton btnEditarCliente;
@@ -1933,12 +1980,10 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton jButton18;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton22;
-    private javax.swing.JButton jButton23;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<Proveedores> jComboBox1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -1982,11 +2027,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField21;
-    private javax.swing.JTextField jTextField22;
-    private javax.swing.JTextField jTextField23;
-    private javax.swing.JTextField jTextField24;
-    private javax.swing.JTextField jTextField25;
+    private javax.swing.JLabel labelNombreEmpresa;
     private javax.swing.JLabel labelUsuarioRegistrado;
     private javax.swing.JTextField txtBusquedaProductoCodigo;
     private javax.swing.JTextField txtBusquedaProductoNombre;
@@ -1999,6 +2040,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField txtDescripcionProductos;
     private javax.swing.JTextField txtDireccionCliente;
     private javax.swing.JTextField txtDireccionClienteVenta;
+    private javax.swing.JTextField txtDireccionEmpresa;
     private javax.swing.JTextField txtDireccionProveedor;
     private javax.swing.JTextField txtFechaVenta;
     private javax.swing.JTextField txtIdCliente;
@@ -2007,17 +2049,21 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField txtIdProveedor;
     private javax.swing.JTextField txtIdVenta;
     private javax.swing.JTextField txtNombreCliente;
+    private javax.swing.JTextField txtNombreEmpresa;
     private javax.swing.JTextField txtNombreProveedor;
     private javax.swing.JTextField txtNombreVenta;
     private javax.swing.JTextField txtPrecioProductos;
     private javax.swing.JTextField txtPrecioVenta;
     private javax.swing.JTextField txtRazonSocialCliente;
+    private javax.swing.JTextField txtRazonSocialEmpresa;
     private javax.swing.JTextField txtRazonSocialProveedor;
     private javax.swing.JTextField txtRazonSocialVenta;
     private javax.swing.JTextField txtRucCliente;
     private javax.swing.JTextField txtRucClienteVenta;
+    private javax.swing.JTextField txtRucEmpresa;
     private javax.swing.JTextField txtRucProveedor;
     private javax.swing.JTextField txtTelefonoCliente;
+    private javax.swing.JTextField txtTelefonoEmpresa;
     private javax.swing.JTextField txtTelefonoProveedor;
     private javax.swing.JTextField txtTelefonoVenta;
     // End of variables declaration//GEN-END:variables
