@@ -248,11 +248,18 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         txtIdClienteVenta.setText("");
 
     }
-    public void VerEmpresa(){
+
+    public void VerEmpresa() {
         int id = 1;
-        empresa= empresaDAO.VerEmpresa(id);
+        empresa = empresaDAO.VerEmpresa(id);
         System.out.println(empresa);
         labelNombreEmpresa.setText(empresa.getNombre());
+        labelDireccionEmpresa.setText(empresa.getDireccion());
+        labelRucEmpresa.setText(String.valueOf(empresa.getRuc()));
+
+        labelRazonSocialEmpresa.setText(empresa.getRazon_social());
+        labelTelefonoEmpresa.setText(empresa.getTelefono());
+
     }
 
     @SuppressWarnings("unchecked")
@@ -378,6 +385,14 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         txtRazonSocialEmpresa = new javax.swing.JTextField();
         btnActualizarEmpresa = new javax.swing.JButton();
         labelUsuarioRegistrado = new javax.swing.JLabel();
+        JlabelDireccionEmpresa = new java.awt.Label();
+        JlabelRucEmpresa = new java.awt.Label();
+        label1 = new java.awt.Label();
+        labelTelefonoEmpresa = new java.awt.Label();
+        labelDireccionEmpresa = new java.awt.Label();
+        labelRucEmpresa = new java.awt.Label();
+        label2 = new java.awt.Label();
+        labelRazonSocialEmpresa = new java.awt.Label();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -484,7 +499,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         labelNombreEmpresa.setFont(new java.awt.Font("Tahoma", 1, 48)); // NOI18N
         labelNombreEmpresa.setForeground(new java.awt.Color(51, 51, 51));
         labelNombreEmpresa.setText("Punto de Venta");
-        getContentPane().add(labelNombreEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 0, 380, 60));
+        getContentPane().add(labelNombreEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 0, 340, 60));
 
         jTabbedPane2.setBackground(new java.awt.Color(255, 255, 255));
         jTabbedPane2.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -1266,7 +1281,35 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         jTabbedPane2.addTab("Configuracion", jPanel5);
 
         getContentPane().add(jTabbedPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 70, 940, 440));
-        getContentPane().add(labelUsuarioRegistrado, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 14, 250, 50));
+        getContentPane().add(labelUsuarioRegistrado, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 80, 20, 10));
+
+        JlabelDireccionEmpresa.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        JlabelDireccionEmpresa.setText("Direccion:");
+        getContentPane().add(JlabelDireccionEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 10, -1, -1));
+
+        JlabelRucEmpresa.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        JlabelRucEmpresa.setText("Ruc:");
+        getContentPane().add(JlabelRucEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 40, -1, -1));
+
+        label1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        label1.setText("Telefono:");
+        getContentPane().add(label1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 10, -1, -1));
+
+        labelTelefonoEmpresa.setText("label2");
+        getContentPane().add(labelTelefonoEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 10, -1, -1));
+
+        labelDireccionEmpresa.setText("label2");
+        getContentPane().add(labelDireccionEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 10, -1, -1));
+
+        labelRucEmpresa.setText("label3");
+        getContentPane().add(labelRucEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 40, -1, -1));
+
+        label2.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        label2.setText("Razon Social:");
+        getContentPane().add(label2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 40, -1, -1));
+
+        labelRazonSocialEmpresa.setText("label3");
+        getContentPane().add(labelRazonSocialEmpresa, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 40, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1951,6 +1994,8 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel JLabelCantidadVenta;
     private javax.swing.JLabel JLabelNombreProducto;
     private javax.swing.JTable JTableNuevaVenta;
+    private java.awt.Label JlabelDireccionEmpresa;
+    private java.awt.Label JlabelRucEmpresa;
     private javax.swing.JLabel JlabelTotalPagar;
     private javax.swing.JScrollPane ScrollPaneProductos;
     private javax.swing.JScrollPane ScrollPaneProveedores;
@@ -2027,7 +2072,13 @@ public class SistemaPrincipal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTable jTable1;
+    private java.awt.Label label1;
+    private java.awt.Label label2;
+    private java.awt.Label labelDireccionEmpresa;
     private javax.swing.JLabel labelNombreEmpresa;
+    private java.awt.Label labelRazonSocialEmpresa;
+    private java.awt.Label labelRucEmpresa;
+    private java.awt.Label labelTelefonoEmpresa;
     private javax.swing.JLabel labelUsuarioRegistrado;
     private javax.swing.JTextField txtBusquedaProductoCodigo;
     private javax.swing.JTextField txtBusquedaProductoNombre;
