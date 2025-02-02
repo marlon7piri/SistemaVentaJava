@@ -42,12 +42,15 @@ public class DetallesDAO {
 
         List<Detalles> detalles = new ArrayList<>();
         try {
-            String sql = "SELECT d.id, d.codigo_prod, d.precio, d.cantidad FROM detalles d  INNER JOIN ventas v ON d.id_venta = v.id WHERE v.id =?";
+            String sql = "SELECT d.id,p.nombre,p.descripcion, d.codigo_prod, d.precio, d.cantidad "
+                    + "FROM detalles d  INNER JOIN ventas v "
+                    + "ON d.id_venta = v.id "
+                    + " INNER JOIN productos p ON p.codigo = d.codigo_prod "
+                    + "WHERE v.id =?";
 
             con = Conexion.getConnection();
             pst = con.prepareStatement(sql);
-            pst.setInt(1,id);
-            
+            pst.setInt(1, id);
 
             rs = pst.executeQuery();
 
@@ -56,6 +59,9 @@ public class DetallesDAO {
                 Detalles detalle = new Detalles();
                 detalle.setId(rs.getInt("id"));
                 detalle.setCodigo_prod(rs.getInt("codigo_prod"));
+                detalle.setProducto(rs.getString("nombre"));
+                detalle.setDescripcion(rs.getString("descripcion"));
+
                 detalle.setPrecio(rs.getDouble("precio"));
                 detalle.setCantidad(rs.getInt("cantidad"));
 

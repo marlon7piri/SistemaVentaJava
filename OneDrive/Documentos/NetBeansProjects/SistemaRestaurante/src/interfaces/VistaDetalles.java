@@ -8,9 +8,9 @@ import javax.swing.table.DefaultTableModel;
 import modelos.detalles.Detalles;
 
 public class VistaDetalles extends javax.swing.JFrame {
-    
+
     DetallesDAO detallesDAO = new DetallesDAO();
-    
+
     public VistaDetalles(String fecha, String id) {
         initComponents();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -20,37 +20,41 @@ public class VistaDetalles extends javax.swing.JFrame {
         labelFecha.setText(fecha);
         labelIdCuenta.setText(id);
         VerDetalles();
-        
+
     }
-    
+
     public void VerDetalles() {
-        
+
         List<Detalles> detalles = detallesDAO.VerDetalles(Integer.parseInt(labelIdCuenta.getText()));
         DefaultTableModel modelo = (DefaultTableModel) TablaDetalles.getModel();
-        
+
         if (modelo.getColumnCount() == 0) {
             modelo.addColumn("Codigo");
+            modelo.addColumn("Producto");
+
             modelo.addColumn("Descripcion");
             modelo.addColumn("Cantidad");
             modelo.addColumn("Precio");
-            
+
         }
-        
+
         for (Detalles detalle : detalles) {
-            Object[] fila = new Object[4];
+            Object[] fila = new Object[5];
             fila[0] = detalle.getCodigo_prod();
-            fila[1] = detalle.getId_venta();
-            fila[2] = detalle.getCantidad();
-            fila[3] = detalle.getPrecio();
+            fila[1] = detalle.getProducto();
+
+            fila[2] = detalle.getDescripcion();
+            fila[3] = detalle.getCantidad();
+            fila[4] = detalle.getPrecio();
             modelo.addRow(fila);
         }
-        
+
     }
-    
+
     private VistaDetalles() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -72,7 +76,7 @@ public class VistaDetalles extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Codigo", "Descripcion", "Cantidad", "Precio"
+                "Codigo", "Producto", "Descripcion", "Cantidad", "Precio"
             }
         ));
         jScrollPane1.setViewportView(TablaDetalles);

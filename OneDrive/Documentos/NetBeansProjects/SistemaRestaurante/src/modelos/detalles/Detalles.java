@@ -4,6 +4,24 @@ public class Detalles {
 
     private int id;
     private int codigo_prod;
+    private String producto;
+    private String descripcion;
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public String getProducto() {
+        return producto;
+    }
+
+    public void setProducto(String producto) {
+        this.producto = producto;
+    }
     private double precio;
     private int cantidad;
     private int id_venta;
