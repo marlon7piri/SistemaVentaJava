@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
@@ -1881,6 +1882,8 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         pdf();
         ActualizarStock();
         LimpiarClienteVenta();
+        modelo = (DefaultTableModel)JTableNuevaVenta.getModel();
+        LimpiarTablas(modelo);
 
 
     }//GEN-LAST:event_btnCrearVentaActionPerformed
@@ -1957,7 +1960,13 @@ public class SistemaPrincipal extends javax.swing.JFrame {
 
     private void btnImprimirPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirPDFActionPerformed
         // TODO add your handling code here:
+        try {
+            String idVenta = txtIdVenta.getText();
+            File file = new File("src/Reportes/ventas" + idVenta + ".pdf");
 
+            Desktop.getDesktop().open(file);
+        } catch (Exception e) {
+        }
 
     }//GEN-LAST:event_btnImprimirPDFActionPerformed
 
@@ -2203,6 +2212,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
             detallesDao.RegistrarDetalles(detalles);
 
         }
+        
     }
 
     private void ActualizarStock() {
@@ -2256,6 +2266,7 @@ public class SistemaPrincipal extends javax.swing.JFrame {
         String fechaFormateada = fechaLocal.format(formatter);
 
         venta.setNombre_cliente(txtClienteNombreBusqueda.getText());
+
         venta.setFecha(fechaDate);
         venta.setTotal(TotalPagar);
 

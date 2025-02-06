@@ -4,6 +4,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,14 +14,17 @@ import modelos.productos.Productos;
 import modelos.ventas.Ventas;
 import java.util.List;
 import modelos.clientes.Clientes;
+import modelos.ventas.VentasDAO;
 
 public class PDF {
+    VentasDAO VentasDAO = new VentasDAO();
 
     public void imprimir(Empresa empresa, Ventas venta,Clientes cliente, List<Productos> productos) {
         FileOutputStream archivo = null;
         try {
+            int id = VentasDAO.getIdVenta();
             // Ruta del archivo PDF
-            File file = new File("src/Reportes/ventas.pdf");
+            File file = new File("src/Reportes/ventas"+ id+".pdf");
             archivo = new FileOutputStream(file);
 
             // Crear un nuevo documento
@@ -45,6 +49,7 @@ public class PDF {
             document.close();
 
             System.out.println("PDF creado exitosamente.");
+            Desktop.getDesktop().open(file);
 
         } catch (DocumentException | IOException e) {
             e.printStackTrace();
