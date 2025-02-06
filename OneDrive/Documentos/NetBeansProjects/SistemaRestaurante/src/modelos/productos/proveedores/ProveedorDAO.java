@@ -55,7 +55,7 @@ public class ProveedorDAO {
             pst.setString(5, proveedor.getRazon_social());
             pst.setInt(6, id);
 
-            pst.setInt(7, id);
+          
 
             int filasActualizadas = pst.executeUpdate();
 
