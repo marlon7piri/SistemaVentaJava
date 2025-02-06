@@ -17,7 +17,7 @@ public class VentasDAO {
     public List<Ventas> VerVentas() {
         List<Ventas> ventas = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM ventas";
+            String sql = "SELECT v.id,c.nombre AS cliente,v.vendedor,v.fecha,v.total FROM ventas v INNER JOIN clientes c ON c.id = v.cliente;";
             con = Conexion.getConnection();
             pst = con.prepareStatement(sql);
             rs = pst.executeQuery();
@@ -25,7 +25,7 @@ public class VentasDAO {
             while (rs.next()) {
                 Ventas venta = new Ventas();
                 venta.setId(rs.getInt("id"));
-                venta.setCliente(rs.getInt("cliente"));
+                venta.setNombre_cliente(rs.getString("cliente"));
                 venta.setVendedor(rs.getString("vendedor"));
                 venta.setFecha(rs.getDate("fecha"));
                 venta.setTotal(rs.getDouble("total"));
@@ -33,7 +33,7 @@ public class VentasDAO {
             }
             
         } catch (Exception e) {
-            System.out.println("Error obteniendo las ventas");
+            System.out.println("Error obteniendo las ventas" + e);
         }
         return ventas;
     }

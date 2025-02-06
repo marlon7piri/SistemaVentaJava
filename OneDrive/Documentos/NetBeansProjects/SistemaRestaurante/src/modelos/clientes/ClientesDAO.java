@@ -46,18 +46,30 @@ public class ClientesDAO {
         return clientes;
     }
 
-    public PreparedStatement CrearCliente() {
+    public boolean CrearCliente(Clientes cliente) {
 
         try {
             String sql = "INSERT INTO clientes(nombre,ruc,telefono,direccion,razon_social) VALUES (?,?,?,?,?)";
-            Connection con = Conexion.getConnection();
+            con = Conexion.getConnection();
+
             pst = con.prepareStatement(sql);
+            pst.setString(1, cliente.getNombre());
+            pst.setInt(2, cliente.getRuc());
+            pst.setString(3, cliente.getTelefono());
+            pst.setString(4, cliente.getDireccion());
+            pst.setString(5, cliente.getRazon_social());
+            
+            pst.execute();
             con.close();
+            pst.close();
+
+            return true;
 
         } catch (SQLException e) {
-            System.out.print("Error creando el producto" + e);
+            System.out.print("Error creando el cliente" + e);
         }
-        return pst;
+        return false;
+
     }
 
     public boolean EliminarCliente(int id) {

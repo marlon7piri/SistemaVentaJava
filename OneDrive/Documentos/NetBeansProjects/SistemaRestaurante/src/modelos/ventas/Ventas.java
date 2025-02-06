@@ -1,12 +1,23 @@
-
 package modelos.ventas;
 
 import java.util.Date;
 
-
 public class Ventas {
+
     private int id;
     private int cliente;
+    private String nombre_cliente;
+    private String vendedor;
+    private double total;
+    private Date fecha;
+
+    public String getNombre_cliente() {
+        return nombre_cliente;
+    }
+
+    public void setNombre_cliente(String nombre_cliente) {
+        this.nombre_cliente = nombre_cliente;
+    }
 
     public int getId() {
         return id;
@@ -15,9 +26,6 @@ public class Ventas {
     public void setId(int id) {
         this.id = id;
     }
-    private String vendedor;
-    private double total;
-    private Date fecha;
 
     public int getCliente() {
         return cliente;
@@ -50,5 +58,5 @@ public class Ventas {
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
-    
+
 }
